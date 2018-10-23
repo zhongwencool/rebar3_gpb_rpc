@@ -1,14 +1,12 @@
-rebar3 etcd v3 proto service generate plugin
-=====
 
-A rebar3 plugin for generating a behaviour etcd v3 service, for use with [eetcd](https://github.com/zhongwencool/eetcd).
+A rebar3 plugin for generating a behaviour gpb rpc
 
 Build
 -----
 
 ```
 $ rebar3 protobuf compile
-$ rebar3 etcd gen
+$ rebar3 gpb_rpc gen
 ```
 
 Use
@@ -16,9 +14,27 @@ Use
 
 Add the plugin to your rebar config:
 
-```
-{deps, [eetcd]}.
+```erlang
+{gpb_rpc_opts, [
+    {router_module, "rpc_router"}, %% default is router
+    {router_enum, "router_service"}, %% default is router_service
+    {o_erl, "src/rpc"}
+]}.
 
-{plugins, [rebar3_gbp_plugin, rebar3_eetcd_plugin]}.
-```
+{gpb_opts, [
+    {recursive, true},
+    {i, "priv/protos"},
+    {ipath, "_build/default/plugins/gpb/priv/proto3/"},
+    use_packages,
+    {module_name_suffix, "_pb"},
+    {o_erl, "src/protos"},
+    {o_hrl, "include"},
+    {strings_as_binaries, true},
+    type_specs]
+}.
 
+{plugins, [
+    rebar3_gpb_plugin,
+    {rebar3_gpb_rpc, {git, "https://github.com/zhongwencool/rebar3_gpb_rpc", {branch, "master"}}}
+]}.
+```
