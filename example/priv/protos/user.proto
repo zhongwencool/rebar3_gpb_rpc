@@ -1,0 +1,57 @@
+package User;
+
+enum router_service {
+  Search = 1;
+  Admin = 2;
+}
+
+service Search {
+  rpc FindPersonByName (Name) returns (Person){option seq = 1;};
+  rpc FindIdByName (Name) returns (Ids){option seq = 2;};
+  rpc FindPersonByAge (RangeRequest) returns (RangeResult){option seq = 3;};
+}
+
+service Admin {
+  rpc Login (Name) returns (Person){option seq = 1;};
+}
+
+message LoginReq {
+   required string email = 1;
+   required string passwd = 2;
+}
+
+message LoginResp {
+   required bool res = 1;
+   optional Person person = 2;
+}
+
+enum gender {
+   Male = 1;
+   Female = 2;
+}
+message Person {
+  required int32 id = 1;
+  required string name = 2;
+  required int32 age = 3;
+  required string passwd = 4;
+  required string email = 5;
+  optional gender sex = 6;
+}
+
+message RangeResult {
+  repeated Person persons = 1;
+}
+
+message RangeRequest {
+  required int32 min_age = 1;
+  required int32 max_age = 2;
+};
+
+message Name {
+  required string name = 1;
+};
+
+message Ids {
+  repeated int32 ids = 1;
+};
+

@@ -1,23 +1,29 @@
 %%%-------------------------------------------------------------------
-%% @doc Behaviour to implement for eectd {{unmodified_service_name}}.
-%%  All detail documents please visit https://github.com/etcd-io/etcd/blob/master/Documentation/dev-guide/api_reference_v3.md
+%% @doc Behaviour to implement for router.
 %% @end
 %%%-------------------------------------------------------------------
 
 %% This module was generated on {{datetime}} and should not be modified manually
 
--module({{module_name}}).
+-module({{router_module}}).
 
--include("router_pb.hrl").
-{{#methods}}
--export([{{method}}/1]).
-{{/methods}}
+-export([decode/1, encode/2]).
 
-{{#methods}}
-%% @doc {{^output_stream}}{{^input_stream}}Unary RPC {{/input_stream}}{{#input_stream}}Stream RPC {{/input_stream}}{{/output_stream}}
--spec {{method}}(#'{{input}}'{}) ->
-    {{^output_stream}}{{^input_stream}}{ok, #'{{output}}'{}}{{/input_stream}}{{#input_stream}}reference(){{/input_stream}}{{/output_stream}}{{#output_stream}}{{^input_stream}}reference(){{/input_stream}}{{#input_stream}}reference(){{/input_stream}}{{/output_stream}} | {error, {'grpc_error', non_neg_integer(), binary()}} | {error, term()}.
-{{method}}(Request) when is_record(Request, '{{input}}') ->
-    {{^output_stream}}{{^input_stream}}eetcd_stream:unary(Request, <<"/etcdserverpb.{{unmodified_service_name}}/{{unmodified_method}}">>, '{{output}}'){{/input_stream}}{{#input_stream}}eetcd_stream:data(Request, <<"/etcdserverpb.{{unmodified_service_name}}/{{unmodified_method}}">>){{/input_stream}}{{/output_stream}}{{#output_stream}}{{^input_stream}}eetcd_stream:data(Request, <<"/etcdserverpb.{{unmodified_service_name}}/{{unmodified_method}}">>){{/input_stream}}{{/output_stream}}.
+-spec decode(binary()) -> {RouterCmd, DecodeMsg} when
+    RouterCmd :: binary(),
+    DecodeMsg :: tuple().
+{{#commands}}
+decode(<<{{cmd1}}:10,{{cmd2}}:10,{{cmd3}}:12,Bin/binary>>) -> {<<{{cmd1}}:10,{{cmd2}}:10,{{cmd3}}:12>>, '{{pb_module}}':decode_msg(Bin, '{{input}}', [])};
+{{/commands}}
+decode(Cmd) -> throw({error, cmd_not_found, Cmd}).
 
-{{/methods}}
+-spec encode(binary(), lists()) -> binary().
+{{#commands}}
+encode(<<{{cmd1}}:10, {{cmd2}}:10, {{cmd3}}:12>>, Values) -> %% {{unmodified_service_name}}({{input}}) -> {{output}}
+    {{^output_base_type}}Rec = list_to_tuple(['{{output}}' | Values]),
+    '{{pb_module}}':encode_msg(Rec, '{{output}}', []);{{/output_base_type}}{{^output_simple_array_type}}Rec = {'{{output}}', Values},
+    '{{pb_module}}':encode_msg(Rec, '{{output}}', []);{{/output_simple_array_type}}{{^output_composite_array_type}}Rec = {'{{output}}', [begin list_to_tuple(['{{output_composite_array}}' | V]) end||V <- Values]},
+    '{{pb_module}}':encode_msg(Rec, '{{output}}', []);{{/output_composite_array_type}}
+{{/commands}}
+encode(Cmd, _Values) ->
+    throw({error, cmd_not_found, Cmd}).

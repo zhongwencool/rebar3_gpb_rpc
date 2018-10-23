@@ -1,0 +1,5 @@
+package RpcRouter;
+
+enum router_service {
+  User = 1;
+}

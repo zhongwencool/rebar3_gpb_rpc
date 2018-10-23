@@ -1,7 +1,7 @@
 {description, "gpb rpc template"}.
 {variables,
  [{unmodified_service_name, [], "Original name of the service, as it'll appear in a request"},
-  {pb_module, "", "Name of protobuf module to get type specs from"},
+  {router_module, "", "Name of protobuf module to get type specs from"},
   {service_name, [], "Name of service"},
-  {methods, [], "List of methods for service"}]}.
-{template, "gpb_rpc_sample.erl", "{{out_dir}}/rpc/{{module_name}}.erl"}.
+  {commands, [], "List of methods for service"}]}.
+{template, "gpb_rpc_sample.erl", "{{out_dir}}/{{router_module}}.erl"}.
