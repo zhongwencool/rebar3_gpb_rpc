@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
-%% This module was generated on 2018-10-23T06:29:44+00:00 and should not be modified manually
+%% This module was generated on 2018-10-23T06:54:13+00:00 and should not be modified manually
 
 -module(rpc_router).
 
@@ -18,7 +18,7 @@ decode(<<1:10,1:10,3:12,Bin/binary>>) -> {<<1:10,1:10,3:12>>, 'user_pb':decode_m
 decode(<<1:10,2:10,1:12,Bin/binary>>) -> {<<1:10,2:10,1:12>>, 'user_pb':decode_msg(Bin, 'User.Name', [])};
 decode(Cmd) -> throw({error, cmd_not_found, Cmd}).
 
--spec encode(binary(), lists()) -> binary().
+-spec encode(binary(), list()) -> binary().
 encode(<<1:10, 1:10, 1:12>>, Values) -> %% Search(User.Name) -> User.Person
     Rec = list_to_tuple(['User.Person' | Values]),
     'user_pb':encode_msg(Rec, 'User.Person', []);

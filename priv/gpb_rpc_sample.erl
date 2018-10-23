@@ -17,7 +17,7 @@ decode(<<{{cmd1}}:10,{{cmd2}}:10,{{cmd3}}:12,Bin/binary>>) -> {<<{{cmd1}}:10,{{c
 {{/commands}}
 decode(Cmd) -> throw({error, cmd_not_found, Cmd}).
 
--spec encode(binary(), lists()) -> binary().
+-spec encode(binary(), list()) -> binary().
 {{#commands}}
 encode(<<{{cmd1}}:10, {{cmd2}}:10, {{cmd3}}:12>>, Values) -> %% {{unmodified_service_name}}({{input}}) -> {{output}}
     {{^output_base_type}}Rec = list_to_tuple(['{{output}}' | Values]),
